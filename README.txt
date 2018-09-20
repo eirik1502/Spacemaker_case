@@ -1,0 +1,5 @@
+- click to select polygons
+- press:
+  - i to intersect two polygons
+  - u to unite two polygons
+  - r to reset to the given data

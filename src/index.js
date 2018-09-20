@@ -35,20 +35,19 @@ map.on('load', function() {
     if (keyCode === 85 || keyCode === 117) {
       // 'U'
 
-      // var selectedFeatures = map.queryRenderedFeatures({
-      //   layers: ['geom'],
-      //   filter: ['boolean', ['feature-state', 'selected'], false]
-      // });
-      // console.log('Selected polygons:', selectedPolygons);
       const selectedPolygonsKeys = Object.keys(selectedPolygons);
       if (selectedPolygonsKeys.length === 2) {
         const union = polygonOperations.union(
           selectedPolygons[selectedPolygonsKeys[0]],
           selectedPolygons[selectedPolygonsKeys[1]]
         );
-
-        //console.log('features:', selectedPolygons.geometry);
-        console.log('union result', union);
+        if (union !== undefined) {
+          const newData = {
+            type: 'FeatureCollection',
+            features: [union]
+          };
+          database.storeGeoJsonData(newData);
+        }
       }
     } else if (keyCode === 73 || keyCode === 105) {
       // 'I'
@@ -60,21 +59,13 @@ map.on('load', function() {
           selectedPolygons[selectedPolygonsKeys[1]]
         );
 
-        console.log('intersect result', intersect);
-
-        const newData = {
-          type: 'FeatureCollection',
-          features: [intersect]
-        };
-        console.log('intersection data update: ', newData);
-
-        //construct new geojson of the remaining data
-        const currentData = map.getSource('geomData');
-        console.log('All data', currentData);
-
-        //TODO: check if data from intersection is valid
-        database.storeGeoJsonData(newData);
-        // updateGeomSource(newData);
+        if (intersect !== undefined) {
+          const newData = {
+            type: 'FeatureCollection',
+            features: [intersect]
+          };
+          database.storeGeoJsonData(newData);
+        }
       }
     }
   });
